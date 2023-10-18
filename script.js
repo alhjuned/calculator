@@ -1,35 +1,28 @@
-var currentExpression = ''; // Variable to store the current expression
-
-function appendToDisplay(value) {
-    document.getElementById('display').value += value;
-    currentExpression += value;
-}
+const display = document.querySelector('.display');
 
 function clearDisplay() {
-    document.getElementById('display').value = '';
-    currentExpression = '';
+    display.value = '';
 }
 
-function calculateResult() {
-    try {
-        // Replace trigonometric function names with their JavaScript equivalents
-        var processedExpression = currentExpression.replace(/sin/g, 'Math.sin')
-                                                 .replace(/cos/g, 'Math.cos')
-                                                 .replace(/tan/g, 'Math.tan')
-                                                 .replace(/sqrt/g, 'Math.sqrt')
-                                                 .replace(/pow/g, 'Math.pow');
+function addToDisplay(text) {
+    display.value += text;
+}
 
-        var result = eval(processedExpression);
-        
-        // Check if the result is a valid number
-        if (!isNaN(result) && isFinite(result)) {
-            document.getElementById('display').value = currentExpression + ' = ' + result;
-        } else {
-            document.getElementById('display').value = 'Error';
+function evaluateDisplay() {
+    try {
+        let expression = display.value;
+        expression = expression.replace(/sin/g, 'Math.sin');
+        expression = expression.replace(/cos/g, 'Math.cos');
+        expression = expression.replace(/tan/g, 'Math.tan');
+
+        let result = eval(expression);
+
+        if (isNaN(result)) {
+            throw new Error('Invalid expression');
         }
+        display.value = result;
     } catch (error) {
-        document.getElementById('display').value = 'Error';
+        alert(error.message);
+        clearDisplay();
     }
-    
-    currentExpression = ''; // Reset the current expression after calculation
 }
